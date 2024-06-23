@@ -33,6 +33,17 @@ def toggle(value):
     return 1 - value
 
 
+def countPrimes(n):
+    """
+    Counts the number of primes up to n
+    """
+    count = 0
+    for i in range(2, n+1):
+        if isPrime(i):
+            count += 1
+    return count
+
+
 def isWinner(x, nums):
     """
     isWinner Function: x and n will not be larger than 10,000
@@ -40,25 +51,21 @@ def isWinner(x, nums):
     * Ben is the other player
     * Each player plays optimally meaning they choose the best choice
     """
-    players = ("Maria", "Ben")
-    turn = 0
+    if x <= 0:
+        return None
+
     roundsWon = {"Maria": 0, "Ben": 0}
-    chosen = []
-    for round in range(x):
-        for num in nums:
-            for d in range(1, num+1):
-                if not isPrime(d):
-                    continue
-                for m in chosen:
-                    if isMultiple(m, d):
-                        continue
-                if d not in chosen:
-                    chosen.append(d)
-                turn = toggle(turn)
-            chosen = []
-        roundsWon[players[turn]] += 1
+
+    for num in nums:
+        primes_count = countPrimes(num)
+        if primes_count % 2 == 0:
+            roundsWon["Ben"] += 1
+        else:
+            roundsWon["Maria"] += 1
 
     if roundsWon["Maria"] > roundsWon["Ben"]:
         return "Maria"
-    else:
+    elif roundsWon["Ben"] > roundsWon["Maria"]:
         return "Ben"
+    else:
+        return None
